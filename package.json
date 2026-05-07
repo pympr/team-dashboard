@@ -1,17 +1,27 @@
 {
   "name": "team-dashboard",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
-    "firebase": "^10.0.0",
-    "framer-motion": "^10.0.0",
-    "next": "14.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "firebase": "^12.12.1",
+    "framer-motion": "^12.38.0",
+    "next": "16.2.5",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "autoprefixer": "^10.5.0",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.5",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.2.4"
   }
 }
