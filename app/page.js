@@ -31,6 +31,7 @@ export default function TeamAvailabilityApp() {
   const [newName, setNewName] = useState("");
   const [newWorkload, setNewWorkload] = useState("");
   const [search, setSearch] = useState("");
+  const [role, setRole] = useState("admin");
 
   // ✅ Real-time Firestore sync
   useEffect(() => {
@@ -75,16 +76,24 @@ export default function TeamAvailabilityApp() {
   return (
     <div>
       <h1>🚀 Technical Designer Availability Dashboard</h1>
+        <div style={{ marginBottom: "15px" }}>
+          <strong>Mode:</strong>{" "}
+          <button onClick={() => setRole("admin")}>Admin</button>
+          <button onClick={() => setRole("viewer")} style={{ marginLeft: "10px" }}>
+            Viewer
+          </button>
+        </div>
 
       {/* 🔍 Search */}
       <input
-        placeholder="Search team member..."
+        placeholder="Cari nama TechDes..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
       {/* ➕ Add Member */}
-      <div className="card">
+        {role === "admin" && (
+          <div className="card">
         <input
           placeholder="Name"
           value={newName}
@@ -101,6 +110,7 @@ export default function TeamAvailabilityApp() {
           Add Member
         </button>
       </div>
+      )}
 
       {/* 🧩 Board */}
       <div className="board">
@@ -118,22 +128,25 @@ export default function TeamAvailabilityApp() {
                 <div key={m.id} className="card">
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <strong>{m.name}</strong>
-                    <button
+                    {role === "admin" && (
+                      <button
                       className="delete"
                       onClick={() => deleteMember(m.id)}
                     >
-                      Delete
+                      Hapus
                     </button>
+                        )}
                   </div>
 
                   <pre>{m.workload}</pre>
-
+                  {role === "admin" && (
                   <button
                     className="toggle"
                     onClick={() => toggleStatus(m)}
                   >
-                    Toggle Status
+                    Ganti Status
                   </button>
+                      )}
                 </div>
               ))}
           </div>
