@@ -52,7 +52,7 @@ export default function TeamAvailabilityApp() {
 
     await addDoc(collection(db, "members"), {
       name: newName,
-      status: "available",
+      status: "Ada",
       workload: newWorkload || "No details",
     });
 
@@ -63,7 +63,7 @@ export default function TeamAvailabilityApp() {
   // 🔄 Toggle status
   const toggleStatus = async (member) => {
     await updateDoc(doc(db, "members", member.id), {
-      status: member.status === "available" ? "busy" : "available",
+      status: member.status === "Ada" ? "busy" : "Ada",
     });
   };
 
@@ -74,7 +74,7 @@ export default function TeamAvailabilityApp() {
 
   return (
     <div>
-      <h1>🚀 Team Availability Dashboard</h1>
+      <h1>🚀 Technical Designer Availability Dashboard</h1>
 
       {/* 🔍 Search */}
       <input
@@ -104,7 +104,7 @@ export default function TeamAvailabilityApp() {
 
       {/* 🧩 Board */}
       <div className="board">
-        {["available", "busy"].map((status) => (
+        {["Ada", "busy"].map((status) => (
           <div key={status}>
             <h2>{status}</h2>
 
