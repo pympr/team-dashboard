@@ -1,0 +1,144 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
+// 🔥 Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCYztFTb2cuTCrwgPgJk3O20C7SZwnx-wQ",
+  authDomain: "teamworkload-d526d.firebaseapp.com",
+  projectId: "teamworkload-d526d",
+  storageBucket: "teamworkload-d526d.firebasestorage.app",
+  messagingSenderId: "436331860817",
+  appId: "1:436331860817:web:47dcab892c2557c58c7970",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export default function TeamAvailabilityApp() {
+  const [members, setMembers] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newWorkload, setNewWorkload] = useState("");
+  const [search, setSearch] = useState("");
+
+  // ✅ Real-time Firestore sync
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
+      setMembers(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // ➕ Add member
+  const addMember = async () => {
+    if (!newName) return;
+
+    await addDoc(collection(db, "members"), {
+      name: newName,
+      status: "available",
+      workload: newWorkload || "No details",
+    });
+
+    setNewName("");
+    setNewWorkload("");
+  };
+
+  // 🔄 Toggle status
+  const toggleStatus = async (member) => {
+    await updateDoc(doc(db, "members", member.id), {
+      status: member.status === "available" ? "busy" : "available",
+    });
+  };
+
+  // ❌ Delete member
+  const deleteMember = async (id) => {
+    await deleteDoc(doc(db, "members", id));
+  };
+
+  return (
+    <div>
+      <h1>🚀 Team Availability Dashboard</h1>
+
+      {/* 🔍 Search */}
+      <input
+        placeholder="Search team member..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      {/* ➕ Add Member */}
+      <div className="card">
+        <input
+          placeholder="Name"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+        />
+
+        <textarea
+          placeholder={`Workload details\n• Task 1\n• Task 2`}
+          value={newWorkload}
+          onChange={(e) => setNewWorkload(e.target.value)}
+        />
+
+        <button className="main" onClick={addMember}>
+          Add Member
+        </button>
+      </div>
+
+      {/* 🧩 Board */}
+      <div className="board">
+        {["available", "busy"].map((status) => (
+          <div key={status}>
+            <h2>{status}</h2>
+
+            {members
+              .filter(
+                (m) =>
+                  m.status === status &&
+                  m.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((m) => (
+                <div key={m.id} className="card">
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <strong>{m.name}</strong>
+                    <button
+                      className="delete"
+                      onClick={() => deleteMember(m.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <pre>{m.workload}</pre>
+
+                  <button
+                    className="toggle"
+                    onClick={() => toggleStatus(m)}
+                  >
+                    Toggle Status
+                  </button>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
