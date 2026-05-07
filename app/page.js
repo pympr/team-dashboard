@@ -116,8 +116,10 @@ export default function TeamAvailabilityApp() {
       <div className="board">
         {["Ada", "Sibuk"].map((status) => (
           <div key={status}>
-            <h2>{status}</h2>
-
+           
+            <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
+              {status.toUpperCase()}
+            </h2>
             {members
               .filter(
                 (m) =>
