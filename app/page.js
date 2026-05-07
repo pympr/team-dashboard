@@ -63,7 +63,7 @@ export default function TeamAvailabilityApp() {
   // 🔄 Toggle status
   const toggleStatus = async (member) => {
     await updateDoc(doc(db, "members", member.id), {
-      status: member.status === "Ada" ? "busy" : "Ada",
+      status: member.status === "Ada" ? "Sibuk" : "Ada",
     });
   };
 
@@ -104,7 +104,7 @@ export default function TeamAvailabilityApp() {
 
       {/* 🧩 Board */}
       <div className="board">
-        {["Ada", "busy"].map((status) => (
+        {["Ada", "Sibuk"].map((status) => (
           <div key={status}>
             <h2>{status}</h2>
 
